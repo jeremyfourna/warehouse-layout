@@ -8,6 +8,12 @@ var warehouseConfig = {
 	boxes: 6
 };
 
+var locationWithLowItems = locationList.filter(function(cur) {
+	return cur.items_count <= 5;
+});
+
+var pickerTour = ["MZ1-2531A03", "MZ1-2813D05", "MZ1-3019D01", "MZ1-0332A03", "MZ1-0719A03", "MZ1-0719A03", "MZ1-0910A02", "MZ1-0919A03", "MZ1-2708A03", "MZ1-2709A01", "MZ1-2714D04", "MZ1-2723D03", "MZ1-2724D05", "MZ1-2903A02", "MZ1-2938A02", "MZ1-3140A02", "MZ1-2910A02", "MZ1-2910A02", "MZ1-2542A02", "MZ1-2705A01", "MZ1-2739A03", "MZ1-2913A01", "MZ1-2926D05", "MZ1-2926D05", "MZ1-3108A03", "MZ1-3117A02", "MZ1-3119A03", "MZ1-3329A03", "MZ1-3340A02", "MZ1-2926D05", "MZ1-3119A03", "MZ1-0538A02", "MZ1-3104A03", "MZ1-3105A01", "MZ1-3110A03", "MZ1-3137A01", "MZ1-3204D05", "MZ1-3309A03", "MZ1-3312A01", "MZ1-3315A03", "MZ1-3316A02", "MZ1-3317A01", "MZ1-3338A02", "MZ1-3204D05", "MZ1-3312A01", "MZ1-2934A03", "MZ1-3103A02", "MZ1-3136D05", "MZ1-3305A03", "MZ1-3305A03", "MZ1-3328A03", "MZ1-3203D02", "MZ1-3305A03"];
+
 // defineLocationInGrid :: Object -> Object -> Number -> Number -> [Number, Number]
 function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, location) {
 
@@ -27,9 +33,9 @@ function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, 
 
 	function defineWidth(warehouseConfig, dashboardWidth, aisle, rack, level) {
 
-		function oddOrEvenRack(widthForAisle, rack) {
+		function oddOrEvenRack(rack) {
 			if (rack % 2 === 0) {
-				return widthForAisle / 2;
+				return spaceByAisle / 2;
 			} else {
 				return 0;
 			}
@@ -43,14 +49,26 @@ function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, 
 			return 0;
 		}
 
-		var widthForAisle = aisle / warehouseConfig.aisles * dashboardWidth;
-		var widthForRack = oddOrEvenRack(widthForAisle, rack);
-		var widthForLevel = level / warehouseConfig.levels * warehouseConfig.levels * 10;
-
+		var spaceByAisle = dashboardWidth / warehouseConfig.aisles;
+		var widthForAisle = (aisle - 1) * spaceByAisle;
+		var widthForRack = oddOrEvenRack(rack);
+		var widthForLevel = (level - 1) / warehouseConfig.levels * warehouseConfig.levels * 6;
+		//console.log("width", widthForAisle, widthForRack, widthForLevel);
 		return widthForAisle + widthForRack + widthForLevel;
 	}
 
 	function defineHeight(warehouseConfig, dashboardHeight, rack, box) {
+
+		function oddOrEvenRack(heightForRack, rack) {
+			if (rack <= 2) {
+				return 0;
+			} else if (rack % 2 === 0) {
+				rack -= 1;
+			}
+
+			return rack * heightForRack;
+		}
+
 		if (rack > warehouseConfig.racks) {
 			return 0;
 		}
@@ -59,10 +77,11 @@ function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, 
 			return 0;
 		}
 
-		var widthForRack = rack / (warehouseConfig.racks / 2) * dashboardWidth;
-		var widthForBox = box / warehouseConfig.boxes * warehouseConfig.boxes * 10;
-
-		return widthForRack + widthForBox;
+		var spaceByRack = dashboardHeight / warehouseConfig.racks;
+		var heightForRack = oddOrEvenRack(spaceByRack, rack);
+		var heightForBox = (box - 1) / warehouseConfig.boxes * warehouseConfig.boxes * 7;
+		//console.log("height", heightForRack, heightForBox);
+		return heightForRack + heightForBox;
 	}
 
 	var val = location.description.slice(4, 11);
@@ -70,15 +89,30 @@ function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, 
 	var rack = Number(val.slice(2, 4));
 	var level = letterToNumber(val.slice(4, 5));
 	var box = Number(val.slice(5, 7));
-	var locationWidth = defineWidth(warehouseConfig, dashboardWidth, aisle, rack, level);
-	var locationHeight = defineHeight(warehouseConfig, dashboardHeight, rack, box);
+	var locationWidth = Math.round(defineWidth(warehouseConfig, dashboardWidth, aisle, rack, level));
+	var locationHeight = Math.round(defineHeight(warehouseConfig, dashboardHeight, rack, box));
 
-	console.log(locationWidth, locationHeight);
-	return [locationWidth, locationHeight];
+	//console.log(locationWidth, locationHeight);
+	return [locationWidth, locationHeight, location.class];
+}
+
+function highlightPickerTour(listOfSteps, location) {
+	if (location.description === listOfSteps[0]) {
+		return "start";
+	} else if (location.description === listOfSteps[listOfSteps.length - 1]) {
+		return "end";
+	} else if (listOfSteps.filter(function(cur) {
+			return cur === location.description
+		}).length !== 0) {
+		return "step";
+	} else {
+		return "point";
+	}
 }
 
 // Replace d3.range() with your Array of data
-var data = locationList.map(function(cur) {
+var data = locationWithLowItems.map(function(cur) {
+	cur.class = highlightPickerTour(pickerTour, cur);
 	return defineLocationInGrid(warehouseConfig, width, height, cur);
 });
 
@@ -135,7 +169,9 @@ var rect = svg.selectAll(".node")
 var point = svg.selectAll(".point")
 	.data(data)
 	.enter().append("circle")
-	.attr("class", "point")
+	.attr("class", function(d) {
+		return d[2];
+	})
 	.attr("cx", function(d) {
 		return d[0];
 	})
