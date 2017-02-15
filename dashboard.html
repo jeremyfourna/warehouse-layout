@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <title>Quadtree - nearest neighbor</title>
+    <style>
+    .point {
+        fill: #999;
+        stroke: #fff;
+    }
+    
+    .point.scanned {
+        fill: orange;
+        fill-opacity: 1;
+        stroke: brown;
+    }
+    
+    .point.selected {
+        fill: red;
+        fill-opacity: 1;
+    }
+    
+    .node {
+        fill: none;
+        stroke: #ccc;
+        shape-rendering: crispEdges;
+    }
+    
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+    </style>
+</head>
+
+<body>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="mz1_location.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
