@@ -9,10 +9,10 @@ var warehouseConfig = {
 };
 
 var locationWithLowItems = locationList.filter(function(cur) {
-	return cur.items_count <= 5;
+	return cur;
 });
 
-var pickerTour = ["MZ1-2531A03", "MZ1-2813D05", "MZ1-3019D01", "MZ1-0332A03", "MZ1-0719A03", "MZ1-0719A03", "MZ1-0910A02", "MZ1-0919A03", "MZ1-2708A03", "MZ1-2709A01", "MZ1-2714D04", "MZ1-2723D03", "MZ1-2724D05", "MZ1-2903A02", "MZ1-2938A02", "MZ1-3140A02", "MZ1-2910A02", "MZ1-2910A02", "MZ1-2542A02", "MZ1-2705A01", "MZ1-2739A03", "MZ1-2913A01", "MZ1-2926D05", "MZ1-2926D05", "MZ1-3108A03", "MZ1-3117A02", "MZ1-3119A03", "MZ1-3329A03", "MZ1-3340A02", "MZ1-2926D05", "MZ1-3119A03", "MZ1-0538A02", "MZ1-3104A03", "MZ1-3105A01", "MZ1-3110A03", "MZ1-3137A01", "MZ1-3204D05", "MZ1-3309A03", "MZ1-3312A01", "MZ1-3315A03", "MZ1-3316A02", "MZ1-3317A01", "MZ1-3338A02", "MZ1-3204D05", "MZ1-3312A01", "MZ1-2934A03", "MZ1-3103A02", "MZ1-3136D05", "MZ1-3305A03", "MZ1-3305A03", "MZ1-3328A03", "MZ1-3203D02", "MZ1-3305A03"];
+var pickerTour = ["MZ1-3129A03", "MZ1-3136D06", "MZ1-3137D05", "MZ1-3137D05", "MZ1-3137D05", "MZ1-3331A01", "MZ1-3331A01", "MZ1-3415D03", "MZ1-0103A01", "MZ1-0305D05", "MZ1-0306D05", "MZ1-0306D05", "MZ1-0314A02", "MZ1-0412D06", "MZ1-0414D02", "MZ1-0723D03", "MZ1-1215D06", "MZ1-1241D03", "MZ1-2504A01", "MZ1-2934A02", "MZ1-3227D05", "MZ1-3339A02", "MZ1-0525A01", "MZ1-0535D06", "MZ1-0923D02", "MZ1-0923D02", "MZ1-0923D02", "MZ1-1908D05", "MZ1-1909D01", "MZ1-1909D06", "MZ1-2524A02", "MZ1-2530A02", "MZ1-2703A03", "MZ1-2715A01", "MZ1-2715A01", "MZ1-2715A01", "MZ1-2715A01", "MZ1-2814D01", "MZ1-2820D04", "MZ1-3025D06", "MZ1-3028D03", "MZ1-3103A02", "MZ1-3106A01", "MZ1-3106A01", "MZ1-3107A03", "MZ1-3109A01", "MZ1-3110A03", "MZ1-3110A03", "MZ1-3111A01", "MZ1-3111A01", "MZ1-3111A02", "MZ1-3111A02", "MZ1-3111A02", "MZ1-3111A03", "MZ1-3111A03", "MZ1-3112A03", "MZ1-3112A03", "MZ1-3112A03", "MZ1-3113A01", "MZ1-3115A02", "MZ1-3115A02", "MZ1-3116A02", "MZ1-3117A02", "MZ1-3117A02", "MZ1-3118A01", "MZ1-3118A01", "MZ1-3118A01", "MZ1-3119A03", "MZ1-3136D05", "MZ1-3204D05", "MZ1-3208D03", "MZ1-3208D03", "MZ1-3208D03", "MZ1-3208D04", "MZ1-3303A02", "MZ1-3305A03", "MZ1-3328A02", "MZ1-3328A02", "MZ1-3332A03", "MZ1-3333A02"];
 
 // defineLocationInGrid :: Object -> Object -> Number -> Number -> [Number, Number]
 function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, location) {
@@ -97,15 +97,32 @@ function defineLocationInGrid(warehouseConfig, dashboardWidth, dashboardHeight, 
 }
 
 function highlightPickerTour(listOfSteps, location) {
+	var listLength = listOfSteps.length;
+	var half = listLength / 2;
+	var quarter = listLength / 4;
+	var locationIndex = listOfSteps.findIndex(function(cur) {
+		return cur === location.description;
+	});
 	if (location.description === listOfSteps[0]) {
 		return "start";
 	} else if (location.description === listOfSteps[listOfSteps.length - 1]) {
 		return "end";
-	} else if (listOfSteps.filter(function(cur) {
-			return cur === location.description
-		}).length !== 0) {
-		return "step";
+	} else if (locationIndex !== -1) {
+		if (locationIndex <= quarter) {
+			return "firstQuarter";
+		} else if (locationIndex <= half) {
+			return "secondQuarter";
+		} else if (locationIndex <= half + quarter) {
+			return "thirdQuarter";
+		} else if (locationIndex <= listLength) {
+			return "fourthQuarter";
+		} else {
+			return "step";
+		}
 	} else {
+		if (Number(location.description.slice(4, 6)) === 7) {
+			return "firstAisle";
+		}
 		return "point";
 	}
 }
@@ -113,6 +130,9 @@ function highlightPickerTour(listOfSteps, location) {
 // Replace d3.range() with your Array of data
 var data = locationWithLowItems.map(function(cur) {
 	cur.class = highlightPickerTour(pickerTour, cur);
+	cur.step = pickerTour.findIndex(function(element) {
+		return element === cur.description;
+	});
 	return defineLocationInGrid(warehouseConfig, width, height, cur);
 });
 

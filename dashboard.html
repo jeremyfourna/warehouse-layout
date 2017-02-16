@@ -13,12 +13,86 @@
         fill: red;
     }
     
+    .firstAisle {
+        fill: orange;
+    }
+    
     .start {
         fill: blue;
     }
     
     .step {
         fill: black;
+    }
+    
+    .firstQuarter {
+        fill: #C500E5;
+    }
+    
+    .secondQuarter {
+        fill: #AA3F98;
+    }
+    
+    .thirdQuarter {
+        fill: #907F4C;
+    }
+    
+    .fourthQuarter {
+        fill: #76BF00;
+    }
+    
+    .firstQuarterDiv {
+        background: #C500E5;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 50px;
+    }
+    
+    .secondQuarterDiv {
+        background: #AA3F98;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 100px;
+    }
+    
+    .thirdQuarterDiv {
+        background: #907F4C;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 150px;
+    }
+    
+    .fourthQuarterDiv {
+        background: #76BF00;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 200px;
+    }
+    
+    .endDiv {
+        background: red;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 250px;
+    }
+    
+    .startDiv {
+        background: blue;
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
     }
     
     .point.scanned {
@@ -47,10 +121,16 @@
 </head>
 
 <body>
+    <div class="startDiv">Start</div>
+    <div class="firstQuarterDiv">1/4</div>
+    <div class="secondQuarterDiv">2/4</div>
+    <div class="thirdQuarterDiv">3/4</div>
+    <div class="fourthQuarterDiv">4/4</div>
+    <div class="endDiv">End</div>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="mz1_location.js"></script>
-    <script src="index.js"></script>
     <script src="testData.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>
