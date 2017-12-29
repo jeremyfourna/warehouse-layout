@@ -8,14 +8,25 @@
   </head>
 
   <body>
-    <select id="algo-selection">
-      <option disabled="true" selected="true">Select an algo for your picker tour</option>
-      <option value="sshaped">S shaped</option>
-      <option value="closestNeighbour">Closest neighbour</option>
-      <option value="ellipse">Ellipse</option>
-    </select>
+    <form>
+      <div>
+        <label for="nb-aisles">Number of aisles inside the warehouse</label>
+        <input type="number" id="nb-aisles" min="1" step="1" value="1">
+      </div>
+      <div>
+        <label for="nb-racks">Number of racks inside one aisle</label>
+        <input type="number" id="nb-racks" min="1" step="1" value="1">
+      </div>
+      <select id="algo-selection">
+        <option disabled="true" selected="true">Select an algo for your picker tour</option>
+        <option value="sshaped">S shaped</option>
+        <option value="closestNeighbour">Closest neighbour</option>
+        <option value="ellipse">Ellipse</option>
+      </select>
+      <button type="button" id="display-picker-tour">Validate your configuration</button>
+    </form>
     <div id="app"></div>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="./index.js"></script>
   </body>
 
 </html>
