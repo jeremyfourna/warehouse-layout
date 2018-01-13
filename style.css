@@ -1,113 +1,23 @@
-.point {
-  fill: #999;
-  stroke: #fff;
+#app {
+  margin-top: 10px;
 }
 
-.end {
-  fill: red;
+.warehouse {
+  border: 1px solid black;
 }
 
-.firstAisle {
-  fill: orange;
+.row {
+  display: flex;
+  flex-direction: row;
 }
 
-.start {
-  fill: blue;
+.place {
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  border: 1px solid black;
 }
 
-.step {
-  fill: black;
-}
-
-.firstQuarter {
-  fill: #C500E5;
-}
-
-.secondQuarter {
-  fill: #AA3F98;
-}
-
-.thirdQuarter {
-  fill: #907F4C;
-}
-
-.fourthQuarter {
-  fill: #76BF00;
-}
-
-.firstQuarterDiv {
-  background: #C500E5;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 50px;
-}
-
-.secondQuarterDiv {
-  background: #AA3F98;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 100px;
-}
-
-.thirdQuarterDiv {
-  background: #907F4C;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 150px;
-}
-
-.fourthQuarterDiv {
-  background: #76BF00;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 200px;
-}
-
-.endDiv {
-  background: red;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 250px;
-}
-
-.startDiv {
-  background: blue;
-  width: 50px;
-  height: 20px;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-}
-
-.point.scanned {
-  fill: orange;
-  fill-opacity: 1;
-  stroke: brown;
-}
-
-.point.selected {
-  fill: red;
-  fill-opacity: 1;
-}
-
-.node {
-  fill: none;
-  stroke: #ccc;
-  shape-rendering: crispEdges;
-}
-
-.brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
+.wall {
+  background-color: grey;
 }
