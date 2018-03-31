@@ -18,22 +18,23 @@ function displayWarehouseAndPickerTour(event) {
   const formData = R.view(formLens, event);
 
   const data = R.mergeAll(R.map(cur => {
-    return notEmpty(R.prop('value', cur)) ? {
-      [R.prop('id', cur)]: R.prop('value', cur)
-    } : {};
+    return R.ifElse(
+      cur => notEmpty(R.prop('value', cur)),
+      cur => ({
+        [R.prop('id', cur)]: R.prop('value', cur)
+      }),
+      R.always({})
+    )(cur);
   }, formData));
 
-  console.log(data);
-  buildWarehouse(data);
+  return buildWarehouse(data);
 }
 
 function buildWarehouse(params) {
   const warehouse = warehouseMatrix(Number(R.prop('nb-racks', params)), Number(R.prop('nb-aisles', params)), []);
-  console.log(warehouse);
-
   const rows = wrapRow(R.map(buildRow, warehouse));
 
-  render('app', rows);
+  return render('app', rows);
 }
 
 function wrapRow(rows) {
@@ -42,13 +43,19 @@ function wrapRow(rows) {
 
 function buildRow(list) {
   function typeOfPlace(place) {
-    return R.equals(place, 0) ? `<div class="place"></div>` : `<div class="place wall"></div>`;
+    return R.ifElse(
+      R.equals(0),
+      R.always('<div class="place"></div>'),
+      R.always('<div class="place wall"></div>')
+    )(place);
   }
 
   return `<div class="row">${R.join('', R.map(typeOfPlace, list))}</div>`;
 }
 
 function render(domId, content) {
-  const el = document.getElementById(domId).innerHTML = content;
+  const el = document.getElementById(domId);
+  el.innerHTML = content;
+
   return el;
 }

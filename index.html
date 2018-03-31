@@ -10,24 +10,24 @@
   <body>
     <form>
       <div>
-        <p>Define your warehouse configuration</p>
+        <h3>Define your warehouse configuration</h3>
       </div>
       <div>
         <label for="nb-aisles">Number of aisles inside the warehouse</label>
-        <input type="number" id="nb-aisles" min="1" step="1" value="2">
+        <input type="number" id="nb-aisles" min="1" step="1" value="16">
       </div>
       <div>
         <label for="nb-racks">Number of racks inside one aisle</label>
-        <input type="number" id="nb-racks" min="2" step="2" value="4">
+        <input type="number" id="nb-racks" min="2" step="2" value="16">
       </div>
-      <div>
+      <!-- <div>
         <select id="algo-selection">
           <option disabled="true" selected="true" value="">Select an algo for your picker tour</option>
           <option value="sshaped">S shaped</option>
           <option value="closestNeighbour">Closest neighbour</option>
           <option value="ellipse">Ellipse</option>
         </select>
-      </div>
+      </div> -->
       <button type="button" id="display-picker-tour">Validate your configuration</button>
     </form>
     <div id="app"></div>
